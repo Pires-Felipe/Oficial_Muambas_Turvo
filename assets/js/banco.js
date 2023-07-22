@@ -93,7 +93,6 @@
   const errorStatusPreference = document.querySelector('.error-message-preference');
   const loadingPreference = document.querySelector('.loading-preference');
  
-
   // Verificação de login
   if (submitButtonLogin) {
     submitButtonLogin.addEventListener("click", () => {
@@ -437,7 +436,12 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
   const perfilFotoUpload = document.querySelector('.UploadPicture');
   const perfilFotoRemove = document.querySelector('.RemovePicture');
   const perfilFotoNav = document.querySelector('.profile-nav-foto');
-  
+  const cropButton = document.getElementById('cropButton');
+  const croppedImage = document.getElementById('croppedImage');
+  const cropperContainer = document.getElementById('cropperContainer');
+
+  let cropper; // Variável para armazenar a instância do CropperJS
+
   const storageProfileRef = storageRef(storage, "Fotos_perfil");
   const filePhotoRef = storageRef(storageProfileRef, 'Fotos_perfil_' + userIdFromDB);
   
@@ -641,15 +645,47 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
   
   if (perfilFotoUpload) {
   perfilFotoUpload.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    loadingFoto.style.display = "block";
+    cropButton.style.display = "block"
+    loadingFoto.style.display = "none";
     errorStatusFoto.style.display = "none";
     succesStatusFoto.style.display = "none";
+    const file = event.target.files[0];
+    if (file) {
+    // Leitura do arquivo selecionado como URL de dados
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      perfilFotoEdit.src = e.target.result;
 
+      // Inicializa o CropperJS com a imagem carregada e configura para permitir seleção manual
+      cropper = new Cropper(perfilFotoEdit, {
+        aspectRatio: 1, 
+        viewMode: 2, 
+        dragMode: 'crop', 
+        cropBoxResizable: true, 
+        background: false,
+        cropBoxMovable: true,
+        responsive: true
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+  });
+};
+  
+  if (perfilFotoUpload) {
+    cropButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    loadingFoto.style.display = "block"
+   cropper.getCroppedCanvas().toBlob((blob) => {
+    // Cria um novo arquivo Blob com o tipo de arquivo "image/jpeg"
+    const newFile = new File([blob], "foto_cortada.jpg", { type: "image/jpeg" });
     // Faz o upload do arquivo para o Firebase Storage
-    uploadBytes(filePhotoRef, file).then(() => {
+    uploadBytes(filePhotoRef, newFile).then(() => {
       console.log('Foto de perfil enviada com sucesso.');
+      cropper.destroy();
+      cropper = null;
       loadingFoto.style.display = "none";
+      cropButton.style.display = "none";
       succesStatusFoto.style.display = "block";
       succesStatusFoto.innerHTML = "Foto atualizada com sucesso"
       // Recupera a URL da foto de perfil e define a imagem nas const perfilFotoView e perfilFotoEdit
@@ -661,17 +697,23 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
         console.log('Erro ao obter a URL da foto de perfil:', error);
       });
     }).catch((error) => {
+      cropper.destroy();
+      cropper = null;
       loadingFoto.style.display = "none";
       errorStatusFoto.style.display = "block";
       errorStatusFoto.innerHTML = "Erro ao enviar foto, tente novamente."
       console.log('Erro ao enviar a foto de perfil:', error);
     });
+  
+
+  }, "image/jpeg");
+
+
+   
+
+});
+}
     
-
-  });
-};
-
-
   if (perfilFotoRemove) {
   perfilFotoRemove.addEventListener('click', () => {
      loadingFoto.style.display = "block";
@@ -698,7 +740,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
   });
 };
 }
-
 
   function alterarPass() {
 
@@ -841,7 +882,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
   }
 
-  
   if (btnSavePreference) {
     btnSavePreference.addEventListener('click', (event) => {
       event.preventDefault();
@@ -891,6 +931,7 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
   if (profilePage || profilePageE) {
     editProfile();
     profilePicture();
+    
   }
 
   window.closeAlertLoginOut = function closeAlertLoginOut() {

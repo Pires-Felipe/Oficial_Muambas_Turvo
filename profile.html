@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+  
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -8,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.svg" />
   <script src="https://kit.fontawesome.com/f51219bb95.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet" crossorigin="anonymous" />
@@ -21,6 +22,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css" />
 
+<!-- Adicione os scripts necessários -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
 
   <!-- ========================= CSS here ========================= -->
@@ -90,7 +93,7 @@
   <link id="html-link" rel="canonical" href="http://localhost:8080/profile.html">
 
   <script type="module" src="assets/js/banco.js"></script>
-  <!-- Preloader 
+  <!-- Preloader -->
   <div class="preloader">
     <div class="preloader-inner">
       <div class="preloader-icon">
@@ -99,7 +102,7 @@
       </div>
     </div>
   </div> 
-  <!-- /End Preloader -->
+  <!-- End Preloader -->
   <header class="header navbar-area">
     <!-- Start Topbar -->
     <div class="topbar">
@@ -476,6 +479,8 @@
                                  <div class="error-message error-message-profile-foto">Erro ao atualizar foto</div>
                                  <div class="sent-message sent-message-profile-foto">Foto atualizada com sucesso</div>
                                 </div>
+                         <button class="btn btn-primary profile-cortar-foto" id="cropButton" style="display: none">Cortar Foto</button>
+
                       </div>
                     </div>
                     <h2 class="form__title">Informações de contato</h2>
@@ -654,7 +659,7 @@
     </div>
   </div>
 
-<div class="whatsapp-chat">
+  <div class="whatsapp-chat">
     <div class="whatsapp-wrap answer"  >
         <div class="whatsapp-title"><i class="bi bi-whatsapp"></i> <span>WhatsApp Chat</span></div>
 

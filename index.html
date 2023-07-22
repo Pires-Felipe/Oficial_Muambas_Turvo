@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-
-
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -38,51 +36,14 @@
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
  
- 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-    // Função para gerar um número de versão aleatório
-    function getRandomVersion() {
-      return Math.floor(Math.random() * 1000000); // Altere o intervalo conforme necessário
-    }
 
-    // Atualizar o arquivo "banco.js" com um parâmetro de consulta aleatório
-    function updateBancoJS() {
-      var version = getRandomVersion();
-      var url = "assets/js/banco.js?v=" + version;
-
-      // Use AJAX para carregar o arquivo "banco.js" dinamicamente
-      $.ajax({
-        url: url,
-        dataType: "script",
-        cache: false, // Desativar o cache para garantir a atualização
-        success: function () {
-          console.log("Arquivo banco.js atualizado com sucesso!");
-        },
-        error: function () {
-          console.error("Erro ao atualizar o arquivo banco.js!");
-        }
-      });
-    }
-
-    // Chamar a função para atualizar o "banco.js" quando a página for carregada
-    window.addEventListener('load', updateBancoJS);
-
-    // Função que recarrega a página
-    function recarregarPagina() {
-      location.reload();
-    }
-
-    // Define o intervalo de segundos para recarregar a página
-    setInterval(recarregarPagina, 15000); // Alterado para 5 segundos (5000 milissegundos)
-  </script>
 </head>
-
+  
 
 <body>
  <link id="html-link" rel="canonical" href="http://localhost:8080">
   
-  <script type="module" src="assets/js/banco.js" id="banco-script"></script>
+  <script type="module" src="assets/js/banco.js"></script>
   <div class="preloader">
     <div class="preloader-inner">
       <div class="preloader-icon">
