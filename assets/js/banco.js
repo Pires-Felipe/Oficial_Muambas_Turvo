@@ -272,21 +272,37 @@ function checkAuthenticationBeforeRender() {
   const currentPage = window.location.pathname.split('/').pop();
 
   if (pagesRequiringAuthentication.includes(currentPage)) {
-    // Adicione aqui o código de configuração e inicialização do Firebase, se ainda não estiver incluído na página.
+    // Verificar se o estado de autenticação está em cache
+    const cachedUserAuthState = localStorage.getItem('userAuthState');
 
-    // onAuthStateChanged
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
+    if (cachedUserAuthState) {
+      // Se o estado de autenticação estiver em cache, obter o valor armazenado
+      const isUserAuthenticated = JSON.parse(cachedUserAuthState);
+      if (!isUserAuthenticated) {
         alertFacaLogin(); // O usuário não está autenticado, exibe uma mensagem
-        
       } else {
         // O usuário está autenticado, permita o carregamento do conteúdo da página
         showPageContent();
       }
-    });
+    } else {
+      // Se não estiver em cache, verificar o estado de autenticação e armazenar em cache
+      onAuthStateChanged(auth, (user) => {
+        const isUserAuthenticated = !!user; // Converte o objeto user em um valor booleano
+
+        // Armazenar o estado de autenticação em cache para uso futuro
+        localStorage.setItem('userAuthState', JSON.stringify(isUserAuthenticated));
+
+        if (!isUserAuthenticated) {
+          alertFacaLogin(); // O usuário não está autenticado, exibe uma mensagem
+        } else {
+          // O usuário está autenticado, permita o carregamento do conteúdo da página
+          showPageContent();
+        }
+      });
+    }
   } else {
     // A página não requer autenticação, permita o carregamento do conteúdo da página
-    
+    showPageContent();
   }
 }
 
@@ -312,7 +328,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertPassAltError() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> As senhas não conferem.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -321,7 +336,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertUserLoginOut() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> Você escolheu sair, caso necessite faça login novamente.<button type="button" onclick="closeAlertLoginOut();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -334,7 +348,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
 
   }
-
   function alertPassIncorrect() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> Senha atual incorreta.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -343,7 +356,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertUserNot() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> Esse email não está cadastrado, crie uma conta.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -352,7 +364,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertFacaLogin() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i>Antes de continuar faça login.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -361,7 +372,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertEmailInvalido() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> Esse email não é válido, insira um endereço válido.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -370,7 +380,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertEmailExist() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> Esse email já está cadastrado, faça login.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -379,7 +388,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertSenhaCurt() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> A senha deve conter 6 dígitos no mínimo, evite usar combinações ou sequências de números.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -388,7 +396,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertErrorData() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> Ops :( <br> Tivemos uma falha ao banco de dados, o erro será reportado automaticamente, Por favor tente novamente mais tarde.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -397,7 +404,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertConexNot() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> Ops :( <br> Tivemos uma falha na conexão, Por favor verifique sua conexão com internet e tente novamente mais tarde.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -406,7 +412,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-
   function alertProfileDadosUp() {
     Swal.fire({
       html: '<div class="alert alert-success alert-dismissible fade show" role="alert"><i class="bi bi-check-circle me-1"></i> Dados do perfil atualizado com sucesso!<button type="button" class="btn-close" onclick="Swal.close();" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -417,7 +422,6 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
       window.location.reload();
     }, 1800);
   }
-
   function alertInfoCheckNull() {
     Swal.fire({
       html: '<div class="alert alert-danger alert-dismissible fade show" role="alert"><i class="bi bi-exclamation-octagon me-1"></i> As informações pessoais precisam ser definidas antes de prosseguir.<button type="button" onclick="Swal.close();" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>',
@@ -456,53 +460,87 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
   const divPedido = document.querySelector('.div-a-pedido');
   const divProfile = document.querySelector('.nav-item-profile');
 
-  if (profileLink && loginLinks) {
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        profileLink.style.display = 'block'; // Exibe o link de perfil
-        divPedido.style.display = 'block';
-        divProfile.style.display = 'flex';
-        loginLinks.forEach((link) => {
-          link.style.display = 'none'; // Oculta os links de login
-        });
-
-        console.log(userIdFromDB); // O usuário está autenticado, exiba o conteúdo apropriado
-      } else {
-        profileLink.style.display = 'none'; // Oculta o link de perfil
-        divPedido.style.display = 'none';
-        divProfile.style.display = 'none';
-        loginLinks.forEach((link) => {
-          link.style.display = 'block'; // Exibe os links de login
-        });
-      }
-    });
-  }
-  if (divProfile) {
-    dataProfileNav();
-  }
-
   function dataProfileNav() {
+  // Verificar se os dados do perfil estão em cache
+  const cachedProfileData = localStorage.getItem('profileData');
+  const cachedProfilePhotoURL = localStorage.getItem('profilePhotoURL');
+  const cachedUserAuthState = localStorage.getItem('userAuthState');
+
+  if (cachedProfileData && cachedProfilePhotoURL && cachedUserAuthState) {
+    // Se os dados do perfil, a URL da foto e o estado de autenticação estiverem em cache, carregar diretamente
+    const userData = JSON.parse(cachedProfileData);
+    exibirDadosPerfil(userData);
+
+    const isUserAuthenticated = JSON.parse(cachedUserAuthState);
+    exibirConteudoApropriado(isUserAuthenticated);
+
+    // Exibir a imagem de perfil do cache
+    perfilFotoNav.src = cachedProfilePhotoURL;
+    if (perfilFotoEdit) { perfilFotoEdit.src = cachedProfilePhotoURL; };
+    if (perfilFotoView) { perfilFotoView.src = cachedProfilePhotoURL; };
+  } else {
+    // Se não estiverem em cache, buscar os dados do perfil e a URL da foto do banco de dados
     get(credenciaisRef)
       .then((snapshot) => {
         const userData = snapshot.val();
+        // Armazenar os dados do perfil em cache para uso futuro
+        localStorage.setItem('profileData', JSON.stringify(userData));
+        exibirDadosPerfil(userData);
 
-
-        document.querySelector('.user-nome').textContent = "Olá " + userData.nome;
-        document.querySelector('.user-nome-ps-2').textContent = userData.nome;
-        document.querySelector('.user-email').textContent = userData.email;
-
-
+        // Verificar o estado de autenticação e armazenar em cache
+        onAuthStateChanged(auth, (user) => {
+          const isUserAuthenticated = !!user; // Converte o objeto user em um valor booleano
+          // Armazenar o estado de autenticação em cache para uso futuro
+          localStorage.setItem('userAuthState', JSON.stringify(isUserAuthenticated));
+          exibirConteudoApropriado(isUserAuthenticated);
+        });
       })
       .catch((error) => {
+        console.error('Erro ao obter os dados do perfil:', error);
       });
-    getDownloadURL(filePhotoRef).then((url) => {
-     perfilFotoNav.src = url;
-     if (perfilFotoEdit) { perfilFotoEdit.src = url; };
-     if (perfilFotoView) { perfilFotoView.src = url; };
-    }).catch((error) => {
-     console.log('Erro ao obter a URL da foto de perfil:', error);
+
+    // Buscar a URL da imagem de perfil e armazenar em cache
+    getDownloadURL(filePhotoRef)
+      .then((url) => {
+        perfilFotoNav.src = url;
+        if (perfilFotoEdit) { perfilFotoEdit.src = url; };
+        if (perfilFotoView) { perfilFotoView.src = url; };
+        // Armazenar a URL da imagem em cache para uso futuro
+        localStorage.setItem('profilePhotoURL', url);
+      })
+      .catch((error) => {
+        console.error('Erro ao obter a URL da foto de perfil:', error);
+      });
+  }
+}
+
+  function exibirDadosPerfil(userData) {
+  document.querySelector('.user-nome').textContent = "Olá " + userData.nome;
+  document.querySelector('.user-nome-ps-2').textContent = userData.nome;
+  document.querySelector('.user-email').textContent = userData.email;
+}
+
+  function exibirConteudoApropriado(isUserAuthenticated) {
+  if (isUserAuthenticated) {
+    profileLink.style.display = 'block'; // Exibe o link de perfil
+    divPedido.style.display = 'block';
+    divProfile.style.display = 'flex';
+    loginLinks.forEach((link) => {
+      link.style.display = 'none'; // Oculta os links de login
     });
+    console.log(userIdFromDB); // O usuário está autenticado, exiba o conteúdo apropriado
+  } else {
+    profileLink.style.display = 'none'; // Oculta o link de perfil
+    divPedido.style.display = 'none';
+    divProfile.style.display = 'none';
+    loginLinks.forEach((link) => {
+      link.style.display = 'block'; // Exibe os links de login
+    });
+  }
+}
+  
+  if (divProfile) {
+    dataProfileNav();
   }
 
   //====================================//
@@ -693,6 +731,7 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
         perfilFotoView.src = url;
         perfilFotoEdit.src = url;
         perfilFotoNav.src = url;
+        localStorage.setItem('profilePhotoURL', url);
       }).catch((error) => {
         console.log('Erro ao obter a URL da foto de perfil:', error);
       });
@@ -1138,60 +1177,46 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
     });
   }
 
-  // Criar os card index para os produtos do banco
   function createCardElement(productId, product) {
-    const colDiv = document.createElement("div");
-    colDiv.className = "col-lg-3 col-md-6 col-12";
+    
+  const colDiv = document.createElement("div");
+  colDiv.className = "col-lg-3 col-md-6 col-12";
 
-    const card = document.createElement("div");
-    card.className = "single-product";
+  const card = document.createElement("div");
+  card.className = "single-product";
 
-    const cardImg = document.createElement("div");
-    cardImg.className = "product-image";
+  const productImage = product.image;
+  const productTitle = product.title;
+  const productPrice = product.price;
+  const selectedColors = product.availablecolors.join(", ");
 
-    const productImage = document.createElement("img");
-    productImage.src = product.image;
-    productImage.alt = product.title;
-    productImage.id = `product-image-${productId}`;
+  card.innerHTML = `
+    <div class="product-image">
+      <img src="${productImage}" alt="${productTitle}">
+      <div class="cart-button button">
+        <a href="javascript:void(0)" class="btn add-to-cart" data-id="${productId}" data-availablecolors="${product.availablecolors.join(",")}" data-image="${product.image}" data-category="${product.category}" data-title="${product.title}" data-review="${product.review}" data-price="${product.price}" data-subtitle="${product.subtitle}" data-details="${product.details}" data-image1="${product.images[0]}" data-image2="${product.images[1]}" data-image3="${product.images[2]}" data-image4="${product.images[3]}">
+          <i class="lni lni-cart"></i> Adicionar ao carrinho
+        </a>
+      </div>
+    </div>
+    <div class="product-info">
+      <span class="category">${product.category}</span>
+      <h4 class="title">
+        <a href="product-details.html">${productTitle}</a>
+      </h4>
+      <ul class="review">
+        ${Array.from({ length: 5 }, () => '<li><i class="lni lni-star-filled"></i></li>').join('')}
+        <li><span>${product.review}</span></li>
+      </ul>
+      <div class="price">
+        <span>${productPrice}</span>
+      </div>
+    </div>
+  `;
 
-    const cartButton = document.createElement("div");
-    cartButton.className = "cart-button button";
-
-    const buttonLink = document.createElement("a");
-
-
-    const addToCartButton = document.createElement("button");
-    addToCartButton.className = "btn add-to-cart";
-    addToCartButton.setAttribute("data-id", productId);
-    addToCartButton.setAttribute("data-availablecolors", product.availablecolors.join(","));
-    addToCartButton.setAttribute("data-image", product.image);
-    addToCartButton.setAttribute("data-category", product.category);
-    addToCartButton.setAttribute("data-title", product.title);
-    addToCartButton.setAttribute("data-review", product.review);
-    addToCartButton.setAttribute("data-price", product.price);
-    addToCartButton.setAttribute("data-subtitle", product.subtitle);
-    addToCartButton.setAttribute("data-details", product.details);
-    addToCartButton.setAttribute("data-image1", product.images[0]);
-    addToCartButton.setAttribute("data-image2", product.images[1]);
-    addToCartButton.setAttribute("data-image3", product.images[2]);
-    addToCartButton.setAttribute("data-image4", product.images[3]);
-
-    const cartIcon = document.createElement("i");
-    cartIcon.className = "lni lni-cart";
-
-    addToCartButton.appendChild(cartIcon);
-    addToCartButton.appendChild(document.createTextNode(" Adicionar ao carrinho"));
-    buttonLink.appendChild(addToCartButton);
-
-    cartButton.appendChild(buttonLink);
-    cardImg.appendChild(productImage);
-    cardImg.appendChild(cartButton);
-
-
-
-    addToCartButton.addEventListener('click', function(event) {
-      event.preventDefault();
-
+  const addToCartButton = card.querySelector(".add-to-cart");
+  addToCartButton.addEventListener('click', function(event) {
+    event.preventDefault();
       const productData = {
         id: productId,
         image: product.image,
@@ -1218,62 +1243,14 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
       setTimeout(function() {
         window.location.replace('product-details.html');
       }, 1000);
-    });
+  });
+  
 
+  colDiv.appendChild(card);
 
-    const productInfo = document.createElement("div");
-    productInfo.className = "product-info";
+  return colDiv;
+}
 
-    const categorySpan = document.createElement("span");
-    categorySpan.className = "category";
-    categorySpan.id = `product-category-${productId}`;
-    categorySpan.textContent = product.category;
-
-    const titleHeading = document.createElement("h4");
-    titleHeading.className = "title";
-
-    const titleLink = document.createElement("a");
-    titleLink.href = "product-details.html";
-    titleLink.id = `product-title-${productId}`;
-    titleLink.textContent = product.title;
-
-    const reviewList = document.createElement("ul");
-    reviewList.className = "review";
-
-    for (let i = 0; i < 5; i++) {
-      const reviewItem = document.createElement("li");
-      const starIcon = document.createElement("i");
-      starIcon.className = "lni lni-star-filled";
-      reviewItem.appendChild(starIcon);
-      reviewList.appendChild(reviewItem);
-    }
-
-    const reviewSpan = document.createElement("li");
-    reviewSpan.id = `product-review-${productId}`;
-    reviewSpan.textContent = product.review;
-    reviewList.appendChild(reviewSpan);
-
-    const priceDiv = document.createElement("div");
-    priceDiv.className = "price";
-
-    const priceSpan = document.createElement("span");
-    priceSpan.id = `product-price-${productId}`;
-    priceSpan.textContent = product.price;
-
-    titleHeading.appendChild(titleLink);
-    productInfo.appendChild(categorySpan);
-    productInfo.appendChild(titleHeading);
-    productInfo.appendChild(reviewList);
-    priceDiv.appendChild(priceSpan);
-    productInfo.appendChild(priceDiv);
-
-    card.appendChild(cardImg)
-    card.appendChild(productInfo);
-
-    colDiv.appendChild(card);
-
-    return colDiv;
-  }
   createProductCards();
 
 
