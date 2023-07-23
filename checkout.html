@@ -30,49 +30,6 @@
   <link rel="stylesheet" href="assets/css/glightbox.min.css?v=2" />
   <link rel="stylesheet" href="assets/css/main.css?v=2" />
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css?v=2" rel="stylesheet">
-  <script>
-    // Função para gerar um número de versão aleatório
-    function getRandomVersion() {
-      return Math.floor(Math.random() * 1000000); // Altere o intervalo conforme necessário
-    }
-
-    // Atualizar URLs dos recursos com um parâmetro de consulta aleatório
-    function updateResourceURLs() {
-      var version = getRandomVersion();
-
-      // Obter todas as tags <script> e <link> na página
-      var scripts = document.getElementsByTagName('script');
-      var links = document.getElementsByTagName('link');
-
-      // Atualizar URLs com o novo parâmetro de consulta
-      for (var i = 0; i < scripts.length; i++) {
-        var script = scripts[i];
-        var src = script.getAttribute('src');
-        if (src) {
-          script.setAttribute('src', src + '?v=' + version);
-        }
-      }
-
-      for (var j = 0; j < links.length; j++) {
-        var link = links[j];
-        var href = link.getAttribute('href');
-        if (href) {
-          link.setAttribute('href', href + '?v=' + version);
-        }
-      }
-    }
-
-    // Chamar a função para atualizar as URLs dos recursos quando a página for carregada
-    window.addEventListener('load', updateResourceURLs);
-
-    // Função que recarrega a página
-    function recarregarPagina() {
-      location.reload();
-    }
-
-    // Define o intervalo de segundos para recarregar a página
-    setInterval(recarregarPagina, 12000);
-  </script>
 </head>
 
 <body>
@@ -196,7 +153,7 @@
         <div class="row align-items-center">
           <div class="col-lg-3 col-md-3 col-7">
             <!-- Start Header Logo -->
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="index.html">
               <img src="assets/images/logo/logo.png" alt="Logo">
             </a>
             <!-- End Header Logo -->

@@ -35,49 +35,6 @@
   <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
-  <script>
-    // Função para gerar um número de versão aleatório
-    function getRandomVersion() {
-      return Math.floor(Math.random() * 1000000); // Altere o intervalo conforme necessário
-    }
-
-    // Atualizar URLs dos recursos com um parâmetro de consulta aleatório
-    function updateResourceURLs() {
-      var version = getRandomVersion();
-
-      // Obter todas as tags <script> e <link> na página
-      var scripts = document.getElementsByTagName('script');
-      var links = document.getElementsByTagName('link');
-
-      // Atualizar URLs com o novo parâmetro de consulta
-      for (var i = 0; i < scripts.length; i++) {
-        var script = scripts[i];
-        var src = script.getAttribute('src');
-        if (src) {
-          script.setAttribute('src', src + '?v=' + version);
-        }
-      }
-
-      for (var j = 0; j < links.length; j++) {
-        var link = links[j];
-        var href = link.getAttribute('href');
-        if (href) {
-          link.setAttribute('href', href + '?v=' + version);
-        }
-      }
-    }
-
-    // Chamar a função para atualizar as URLs dos recursos quando a página for carregada
-    window.addEventListener('load', updateResourceURLs);
-
-    // Função que recarrega a página
-    function recarregarPagina() {
-      location.reload();
-    }
-
-    // Define o intervalo de segundos para recarregar a página
-    setInterval(recarregarPagina, 12000);
-  </script>
 </head>
 
 <body>
