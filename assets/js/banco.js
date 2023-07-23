@@ -986,66 +986,66 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
   var totalPaymentStorage = localStorage.getItem('totalPayment');
   totalPayment = totalPaymentStorage;
 
+  function createElementWithClass(tag, className) {
+  const element = document.createElement(tag);
+  element.classList.add(className);
+  return element;
+}
+
+  function createTextElement(tag, textContent) {
+  const element = document.createElement(tag);
+  element.textContent = textContent;
+  return element;
+}
+
   function checkout() {
-
-    // Escuta as alterações no carrinho do usuário
-    onValue(carrinhoRef, (snapshot) => {
-      const carrinhoData = snapshot.val();
+   onValue(carrinhoRef, (snapshot) => {
+      carrinhoData = snapshot.val();     
       const carrinhoContainer = document.getElementById("carrinho-container");
-
-      // Limpa o conteúdo anterior do carrinho
       carrinhoContainer.innerHTML = "";
 
-      // Percorre cada item do carrinho
       for (const itemId in carrinhoData.itens) {
         if (Object.hasOwnProperty.call(carrinhoData.itens, itemId)) {
           const item = carrinhoData.itens[itemId];
 
-          // Cria os elementos HTML para o produto
-          const article = document.createElement("article");
-          article.classList.add("product");
+          const article = createElementWithClass("article", "product");
+          article.innerHTML = `
+            <img class="product__image" src="${item.imagem}" alt="${item.titulo}" />
+            <div class="product__details">
+              <div>
+                <h3 class="product__title">${item.titulo}</h3>
+                <div class="price">
+                  <p class="price__after">R$ ${item.preco_unitario}</p>
+                  <s class="price__before">R$ 99,90</s>
+                </div>
+              </div>
+              <div class="quantityy">
+                <button class="quantity__btn decrease-qty">-</button>
+                <p class="quantity__count count quantity_${item.id}">${item.quantidade}</p>
+                <button class="quantity__btn increase-qty">+</button>
+          </div>
+            </div>
+          `;
 
-          const img = document.createElement("img");
-          img.classList.add("product__image");
-          img.src = item.imagem;
-          img.alt = item.titulo;
+        carrinhoContainer.appendChild(article);
+       
+ const decreaseBtn = article.querySelector(".decrease-qty");
+const increaseBtn = article.querySelector(".increase-qty");
+const quantityCount = article.querySelector(`.quantity_${item.id}`);
 
-          const divDetails = document.createElement("div");
-          divDetails.classList.add("product__details");
+decreaseBtn.addEventListener("click", () => {
+  decreaseQuantity(itemId);
+});
 
-          const divTitle = document.createElement("div");
-          divTitle.classList.add("title__h")
-          const h3Title = document.createElement("h3");
-          h3Title.classList.add("product__title");
-          h3Title.textContent = item.titulo;
+increaseBtn.addEventListener("click", () => {
+  increaseQuantity(itemId);
+});
 
-          const divPrice = document.createElement("div");
-          divPrice.classList.add("price");
-
-          const pPriceAfter = document.createElement("p");
-          pPriceAfter.classList.add("price__after");
-          pPriceAfter.textContent = "R$" + item.preco_unitario;
-
-          const sPriceBefore = document.createElement("s");
-          sPriceBefore.classList.add("price__before");
-          sPriceBefore.textContent = "R$ 99,90";
-
-          // Adiciona os elementos ao HTML
-          divTitle.appendChild(h3Title);
-          divPrice.appendChild(pPriceAfter);
-          divPrice.appendChild(sPriceBefore);
-
-          divDetails.appendChild(divTitle);
-          divDetails.appendChild(divPrice);
-
-          article.appendChild(img);
-          article.appendChild(divDetails);
-
-          carrinhoContainer.appendChild(article);
-        }
+        
       }
+    }
 
-
+// ok 
 
 
       // Recupere os dados do usuário do banco de dados
@@ -1118,8 +1118,67 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
           console.error('Erro ao recuperar dados do perfil:', error);
         });
     });
-  }
+}
 
+  let carrinhoData;
+
+  function getItemElement(itemId) {
+  return document.getElementById(itemId);
+}
+  
+  window.decreaseQuantity = function decrease(itemId) {
+  // Obter a quantidade atual do produto no carrinho
+  const item = carrinhoData.itens[itemId];
+  if (item) {
+    let newQuantity = item.quantidade - 1;
+    // Verificar se a quantidade não é menor que 1 (mínimo permitido)
+    newQuantity = Math.max(newQuantity, 0);
+    // Atualizar a quantidade do produto no carrinho
+    carrinhoData.itens[itemId].quantidade = newQuantity;
+    updateQuantityView(itemId, newQuantity);
+    updateQuantidadeNoBanco(itemId, newQuantity);
+    
+
+  }
+}
+
+  window.increaseQuantity = function increase(itemId) {
+  // Obter a quantidade atual do produto no carrinho
+  const item = carrinhoData.itens[itemId];
+  if (item) {
+    let newQuantity = item.quantidade + 1;
+    // Atualizar a quantidade do produto no carrinho
+    carrinhoData.itens[itemId].quantidade = newQuantity;
+    updateQuantityView(itemId, newQuantity);
+    updateQuantidadeNoBanco(itemId, newQuantity);
+    
+
+  }
+}
+
+  function updateQuantityView(itemId, newQuantity) {
+  const item = carrinhoData.itens[itemId];
+  const quantityCount = document.querySelector(`.quantity_${item.id}`);
+  quantityCount.innerHTML = newQuantity;
+  
+}
+  
+  function updateQuantidadeNoBanco(itemId, newQuantity) {
+  // Atualizar a quantidade do produto no banco de dados
+
+ 
+  update(ref(database, `usuarios/${usuarioRef}/carrinho/${carrinhoId}/itens/${itemId}`), {
+    quantidade: newQuantity
+  }
+    )
+    .then(() => {
+      console.log("Quantidade atualizada no banco de dados com sucesso!");
+    })
+    .catch((error) => {
+      console.error("Erro ao atualizar quantidade no banco de dados:", error);
+    });
+}
+  
   function calcularTotal(valorTotalItens) {
     const freteElement = document.getElementById("frete");
     const descontoElement = document.getElementById("desconto");
@@ -2148,58 +2207,5 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
     alert("Faça login"); // O usuário não está autenticado, exiba o conteúdo de visitante ou redirecione para a página de login
    }
   });
-  
-  const inputs = document.querySelectorAll('input');
-const select = document.querySelector('select');
+  */
 
-const decreaseQuantityBtn1 = document.querySelector('.decrease-qty1');
-const increaseQuantityBtn1 = document.querySelector('.increase-qty1');
-const quantityCount1 = document.querySelector('.count1');
-
-const decreaseQuantityBtn2 = document.querySelector('.decrease-qty2');
-const increaseQuantityBtn2 = document.querySelector('.increase-qty2');
-const quantityCount2 = document.querySelector('.count2');
-
-const increment = (value) => {
- const result = value + 1;
- return result;
-};
-
-const decrement = (value) => {
- const result = value - 1;
- return result;
-};
-
-const decreaseQty = (countEl) => {
- const count = parseInt(countEl.innerHTML);
- let result = 0;
-
- if (count > 1) {
-  result = decrement(count);
-  countEl.innerHTML = String(result);
- }
-};
-
-const increaseQty = (countEl) => {
- const count = parseInt(countEl.innerHTML);
- const result = increment(count);
- countEl.innerHTML = String(result);
-};
-
-decreaseQuantityBtn1.addEventListener('click', () => {
- decreaseQty(quantityCount1);
-});
-
-increaseQuantityBtn1.addEventListener('click', () => {
- increaseQty(quantityCount1);
-});
-
-decreaseQuantityBtn2.addEventListener('click', () => {
- decreaseQty(quantityCount2);
-});
-
-increaseQuantityBtn2.addEventListener('click', () => {
- increaseQty(quantityCount2);
-});
-
-*/
