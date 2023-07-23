@@ -267,7 +267,7 @@
 
 // Função para verificar o estado de autenticação antes de permitir o carregamento do conteúdo da página
 function checkAuthenticationBeforeRender() {
-  const pagesRequiringAuthentication = ['profile.html', 'Pedidos.html', 'ordem.html', 'carrinho.html', 'checkout.html', 'payment.html'];
+  const pagesRequiringAuthentication = ['profile.html', 'pedidos.html', 'ordem.html', 'carrinho.html', 'checkout.html', 'payment.html'];
 
   const currentPage = window.location.pathname.split('/').pop();
 
