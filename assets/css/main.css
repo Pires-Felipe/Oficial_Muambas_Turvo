@@ -3852,15 +3852,20 @@ ol {
 }
 
 .item-details .product-info .form-group {
-  margin-top: 20px;
+  margin: 20px 0;
+}
+
+.color-option {
+  background: rgba(234,234,234,0.887);
 }
 
 .item-details .product-info .form-group.color-option .title-label {
   display: block !important;
+  margin-top: 9px;
 }
 
 .item-details .product-info .form-group.color-option .single-checkbox {
-  margin-top: 8px;
+  margin: 8px 0;
   display: inline-block;
   margin-right: 5px;
 }

@@ -309,7 +309,10 @@ function checkAuthenticationBeforeRender() {
 // Função para exibir o conteúdo da página após a verificação de autenticação
 function showPageContent() {
   // Mostra o conteúdo da página definindo o estilo do corpo como 'block'
-  document.querySelector('.auth-display').style.display = 'block';
+  const authDisplay = document.querySelector('.auth-display');
+  if (authDisplay) {
+  authDisplay.style.display = 'block';
+}
 }
 
 // Verificar o estado de autenticação antes de permitir o carregamento do conteúdo da página
@@ -1300,7 +1303,7 @@ increaseBtn.addEventListener("click", () => {
       localStorage.setItem('productData', JSON.stringify(productData));
       // Redirecionar para a página de detalhes do produto após um pequeno atraso
       setTimeout(function() {
-        window.location.replace('product-details.html');
+        window.location.replace(`product-details.html?id=${productId}`);
       }, 1000);
   });
   
@@ -1328,113 +1331,124 @@ increaseBtn.addEventListener("click", () => {
   const colorOptionContainer = document.getElementById('colorOptions');
 
   if (colorOptionContainer) {
-    // Verificar se há dados do produto armazenados no sessionStorage
-    if (sessionStorage.getItem('productData')) {
-      const productData = JSON.parse(sessionStorage.getItem('productData'));
-      const availableColors = productData.colors.split(',');
+    // Obtendo o ID do produto dos parâmetros da URL
+   const urlParams = new URLSearchParams(window.location.search);
+   const productId = urlParams.get('id');
 
-      const colorOptionContainer = document.getElementById('colorOptions');
-      const colors = productData.colors.split(',');
+// Função para buscar os detalhes do produto no banco de dados
+function fetchProductDetails(productId) {
+  const productRef = ref(database, `produtos/${productId}`);
+  get(productRef)
+    .then((snapshot) => {
+      const productData = snapshot.val();
+      if (productData) {
+        // Definir os elementos onde os dados do produto serão exibidos
+        const productImage = document.getElementById('current');
+        const productImage1 = document.getElementById('product-image1');
+        const productImage2 = document.getElementById('product-image2');
+        const productImage3 = document.getElementById('product-image3');
+        const productImage4 = document.getElementById('product-image4');
+        const productCategory = document.getElementById('product-category');
+        const productTitle = document.getElementById('product-title');
+        const productPrice = document.getElementById('product-price');
+        const productDescription = document.getElementById('product-description');
+        const productDetailsImg = document.getElementById('product-details-img');
+        const productDetails = document.getElementById('product-details');
 
-      colors.forEach((color, index) => {
-        const checkboxDiv = document.createElement('div');
-        checkboxDiv.classList.add('single-checkbox');
+        // Atualizar os elementos com os dados do produto
+        productImage.src = productData.image;
+        productImage1.src = productData.images[0];
+        productImage2.src = productData.images[1];
+        productImage3.src = productData.images[2];
+        productImage4.src = productData.images[3];
+        productCategory.innerHTML += ' <a href="javascript:void(0)">' + productData.category + '</a>';
+        productTitle.innerHTML = productData.title;
+        productPrice.innerHTML = productData.price;
+        productDescription.innerHTML = productData.subtitle;
 
-        const checkboxInput = document.createElement('input');
-        checkboxInput.type = 'checkbox';
-        checkboxInput.id = `checkbox-${color}`;
-        checkboxInput.checked = true;
-        checkboxDiv.appendChild(checkboxInput);
+        if (isImageURL(productData.details)) {
+          // Se o productData.details for uma URL de imagem
+          productDetailsImg.src = productData.details;
+        } else {
+          // Se o productData.details for um texto
+          productDetails.innerHTML = productData.details;
+        }
 
-        const checkboxLabel = document.createElement('label');
-        checkboxLabel.setAttribute('for', `checkbox-${color}`);
-        const span = document.createElement('span');
-        span.setAttribute('data-color', color);
+        // Verificar se o produto possui informações sobre as cores
+        if (productData.availablecolors && Array.isArray(productData.availablecolors)) {
+          const colorOptionContainer = document.getElementById('colorOptions');
 
-        checkboxLabel.appendChild(span);
-        checkboxDiv.appendChild(checkboxLabel);
+          // Limpar o conteúdo atual do container de cores
+          colorOptionContainer.innerHTML = '';
 
-        const checkboxStyleClass = `checkbox-style-${index + 1}`;
-        checkboxDiv.classList.add(checkboxStyleClass);
+          // Iterar sobre as cores do produto e criar os elementos para exibi-las
+          productData.availablecolors.forEach((color, index) => {
+            const checkboxDiv = document.createElement('div');
+            checkboxDiv.classList.add('single-checkbox');
 
-        checkboxInput.addEventListener('change', function() {
-          const selectedCheckboxes = document.querySelectorAll('.single-checkbox input:checked');
-          selectedCheckboxes.forEach((checkbox) => {
-            checkbox.parentNode.classList.add('checked');
+            const checkboxInput = document.createElement('input');
+            checkboxInput.type = 'checkbox';
+            checkboxInput.id = `checkbox-${color}`;
+            checkboxInput.checked = true;
+            checkboxDiv.appendChild(checkboxInput);
+
+            const checkboxLabel = document.createElement('label');
+            checkboxLabel.setAttribute('for', `checkbox-${color}`);
+            const span = document.createElement('span');
+            span.setAttribute('data-color', color);
+
+            checkboxLabel.appendChild(span);
+            checkboxDiv.appendChild(checkboxLabel);
+
+            const checkboxStyleClass = `checkbox-style-${index + 1}`;
+            checkboxDiv.classList.add(checkboxStyleClass);
+
+            checkboxInput.addEventListener('change', function() {
+              const selectedCheckboxes = document.querySelectorAll('.single-checkbox input:checked');
+              selectedCheckboxes.forEach((checkbox) => {
+                checkbox.parentNode.classList.add('checked');
+              });
+
+              const uncheckedCheckboxes = document.querySelectorAll('.single-checkbox input:not(:checked)');
+              uncheckedCheckboxes.forEach((checkbox) => {
+                checkbox.parentNode.classList.remove('checked');
+              });
+            });
+
+            const style = document.createElement('style');
+            style.innerHTML = `
+              .item-details .product-info .form-group.color-option .single-checkbox.${checkboxStyleClass} input[type="checkbox"]+label span {
+                border: 2px solid ${color};
+              }
+              .item-details .product-info .form-group.color-option .single-checkbox.${checkboxStyleClass} input[type="checkbox"]+label span::before {
+                background-color: ${color};
+              }
+            `;
+            document.head.appendChild(style);
+
+            colorOptionContainer.appendChild(checkboxDiv);
           });
-
-          const uncheckedCheckboxes = document.querySelectorAll('.single-checkbox input:not(:checked)');
-          uncheckedCheckboxes.forEach((checkbox) => {
-            checkbox.parentNode.classList.remove('checked');
-          });
-        });
-
-        const style = document.createElement('style');
-        style.innerHTML = `
-      .item-details .product-info .form-group.color-option .single-checkbox.${checkboxStyleClass} input[type="checkbox"]+label span {
-        border: 2px solid ${color};
-      }
-      .item-details .product-info .form-group.color-option .single-checkbox.${checkboxStyleClass} input[type="checkbox"]+label span::before {
-        background-color: ${color};
-      }
-    `;
-        document.head.appendChild(style);
-
-        colorOptionContainer.appendChild(checkboxDiv);
-      });
-
-      // Definir os elementos onde os dados do produto serão exibidos
-      const productImage = document.getElementById('current');
-      const productImage1 = document.getElementById('product-image1');
-      const productImage2 = document.getElementById('product-image2');
-      const productImage3 = document.getElementById('product-image3');
-      const productImage4 = document.getElementById('product-image4');
-      const productCategory = document.getElementById('product-category');
-      const productTitle = document.getElementById('product-title');
-      const productPrice = document.getElementById('product-price');
-      const productDescription = document.getElementById('product-description');
-      const productDetailsImg = document.getElementById('product-details-img');
-      const productDetails = document.getElementById('product-details');
-      const productId = document.querySelector('.id-data').setAttribute('data-id', 'x');
-
-      // Atualizar os elementos com os dados do produto
-      productImage.src = productData.image;
-      productImage1.src = productData.image1;
-      productImage2.src = productData.image2;
-      productImage3.src = productData.image3;
-      productImage4.src = productData.image4;
-      productCategory.innerHTML += ' <a href="javascript:void(0)">' + productData.category + '</a>';
-      productTitle.innerHTML = productData.title;
-      productPrice.innerHTML = productData.price;
-      productDescription.innerHTML = productData.subtitle;
-
-      productTitle.dataset.id = productData.id;
-
-
-      if (isImageURL(productData.details)) {
-        // Se o productData.details for uma URL de imagem
-        productDetailsImg.src = productData.details; //
+        }
       } else {
-        // Se o productData.details for um texto
-        productDetails.innerHTML = productData.details; //
+        console.error('Produto não encontrado no banco de dados.');
       }
+    })
+    .catch((error) => {
+      console.error('Erro ao recuperar detalhes do produto:', error);
+    });
+}
+
+// Função para verificar se uma URL é de uma imagem
+function isImageURL(url) {
+  return url.toLowerCase().startsWith('http');
+}
 
 
-      function isImageURL(url) {
-        return url.toLowerCase().startsWith('http');
-      }
+// Chamar a função para buscar os detalhes do produto
+fetchProductDetails(productId);
 
-
-      // Armazenar os dados do produto no localStorage ao carregar a página
-      localStorage.setItem('productData', JSON.stringify(productData));
-    }
-  }
-
-  // Limpar os dados do produto ao sair da página
-  window.addEventListener('beforeunload', function() {
-    localStorage.removeItem('productData');
-  });
-
+}
+    
 
   //====================================//
 
