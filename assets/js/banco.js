@@ -1217,10 +1217,10 @@ increaseBtn.addEventListener("click", () => {
   function createCardElement(productId, product) {
     
   const colDiv = document.createElement("div");
-  colDiv.className = "col-lg-3 col-md-6 col-12";
+  colDiv.className = "col-lg-3 col-md-6 col-12 card-index-product";
 
   const card = document.createElement("div");
-  card.className = "single-product";
+  card.className = "single-product card";
 
   const productImage = product.image;
   const productTitle = product.title;
@@ -1232,14 +1232,14 @@ increaseBtn.addEventListener("click", () => {
       <img src="${productImage}" alt="${productTitle}">
       <div class="cart-button button">
         <a href="javascript:void(0)" class="btn add-to-cart" data-id="${productId}" data-availablecolors="${product.availablecolors.join(",")}" data-image="${product.image}" data-category="${product.category}" data-title="${product.title}" data-review="${product.review}" data-price="${product.price}" data-subtitle="${product.subtitle}" data-details="${product.details}" data-image1="${product.images[0]}" data-image2="${product.images[1]}" data-image3="${product.images[2]}" data-image4="${product.images[3]}">
-          <i class="lni lni-cart"></i> Adicionar ao carrinho
+          <i class="lni lni-cart"></i> Detalhes
         </a>
       </div>
     </div>
     <div class="product-info">
       <span class="category">${product.category}</span>
       <h4 class="title">
-        <a href="product-details.html">${productTitle}</a>
+        <a href="product-details.html?id=${productId}">${productTitle}</a>
       </h4>
       <ul class="review">
         ${Array.from({ length: 5 }, () => '<li><i class="lni lni-star-filled"></i></li>').join('')}
