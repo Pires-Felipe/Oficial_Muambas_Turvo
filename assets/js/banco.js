@@ -249,11 +249,9 @@
   // Após o usuário fazer login com sucesso
   setPersistence(auth, browserLocalPersistence)
     .then(() => {
-      // A persistência local foi definida com sucesso
-    })
+   })
     .catch((error) => {
-      // Ocorreu um erro ao definir a persistência local
-    });
+   });
 
 
   // ======= Verificar estado de auth para exibir páginas corretas ====//
@@ -263,60 +261,30 @@
   var pedidosPage = document.querySelector(".page-pedido");
   var paymentPage = document.querySelector(".page-payment");
   var ordemPage = document.querySelector(".page-ordem");
+  const authDisplay = document.querySelector('.auth-display');
+ 
 
 
-// Função para verificar o estado de autenticação antes de permitir o carregamento do conteúdo da página
-function checkAuthenticationBeforeRender() {
-  const pagesRequiringAuthentication = ['profile.html', 'pedidos.html', 'ordem.html', 'carrinho.html', 'checkout.html', 'payment.html'];
-
-  const currentPage = window.location.pathname.split('/').pop();
-
-  if (pagesRequiringAuthentication.includes(currentPage)) {
-    // Verificar se o estado de autenticação está em cache
-    const cachedUserAuthState = localStorage.getItem('userAuthState');
-
-    if (cachedUserAuthState) {
-      // Se o estado de autenticação estiver em cache, obter o valor armazenado
-      const isUserAuthenticated = JSON.parse(cachedUserAuthState);
-      if (!isUserAuthenticated) {
-        alertFacaLogin(); // O usuário não está autenticado, exibe uma mensagem
-      } else {
-        // O usuário está autenticado, permita o carregamento do conteúdo da página
-        showPageContent();
-      }
-    } else {
-      // Se não estiver em cache, verificar o estado de autenticação e armazenar em cache
-      onAuthStateChanged(auth, (user) => {
-        const isUserAuthenticated = !!user; // Converte o objeto user em um valor booleano
-
-        // Armazenar o estado de autenticação em cache para uso futuro
-        localStorage.setItem('userAuthState', JSON.stringify(isUserAuthenticated));
-
-        if (!isUserAuthenticated) {
-          alertFacaLogin(); // O usuário não está autenticado, exibe uma mensagem
-        } else {
-          // O usuário está autenticado, permita o carregamento do conteúdo da página
-          showPageContent();
-        }
-      });
-    }
+function exibirConteudoApropriado(isUserAuthenticated) {
+  if (isUserAuthenticated) {
+    profileLink.style.display = 'block'; // Exibe o link de perfil
+    divPedido.style.display = 'block';
+    divProfile.style.display = 'block';
+    loginLinks.forEach((link) => {
+      link.style.display = 'none'; // Oculta os links de login
+    });
+    console.log(userIdFromDB); // O usuário está autenticado, exiba o conteúdo apropriado
   } else {
-    // A página não requer autenticação, permita o carregamento do conteúdo da página
-    showPageContent();
+    profileLink.style.display = 'none'; // Oculta o link de perfil
+    divPedido.style.display = 'none';
+    divProfile.style.display = 'none';
+    loginLinks.forEach((link) => {
+      link.style.display = 'block'; // Exibe os links de login
+    });
   }
 }
+  
 
-// Função para exibir o conteúdo da página após a verificação de autenticação
-function showPageContent() {
-  // Mostra o conteúdo da página definindo o estilo do corpo como 'block'
-  const authDisplay = document.querySelector('.auth-display');
-  if (authDisplay) {
-  authDisplay.style.display = 'block';
-}
-}
-
-// Verificar o estado de autenticação antes de permitir o carregamento do conteúdo da página
-document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
   //====================================//
 
@@ -476,13 +444,27 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     const isUserAuthenticated = JSON.parse(cachedUserAuthState);
     exibirConteudoApropriado(isUserAuthenticated);
-
+   
+   if (authDisplay) {
+     authDisplay.style.display = 'block';
+   }
+   
+   
     // Exibir a imagem de perfil do cache
     perfilFotoNav.src = cachedProfilePhotoURL;
     if (perfilFotoEdit) { perfilFotoEdit.src = cachedProfilePhotoURL; };
     if (perfilFotoView) { perfilFotoView.src = cachedProfilePhotoURL; };
+
   } else {
-    // Se não estiverem em cache, buscar os dados do perfil e a URL da foto do banco de dados
+    
+    divProfile.style.display = "none";
+    profileLink.style.display = 'none';
+    divPedido.style.display = 'none';
+    
+    
+    onAuthStateChanged(auth, (user) => {
+   if (user) {
+          // Se não estiverem em cache, buscar os dados do perfil e a URL da foto do banco de dados
     get(credenciaisRef)
       .then((snapshot) => {
         const userData = snapshot.val();
@@ -501,7 +483,7 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
       .catch((error) => {
         console.error('Erro ao obter os dados do perfil:', error);
       });
-
+ 
     // Buscar a URL da imagem de perfil e armazenar em cache
     getDownloadURL(filePhotoRef)
       .then((url) => {
@@ -514,7 +496,16 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
       .catch((error) => {
         console.error('Erro ao obter a URL da foto de perfil:', error);
       });
-  }
+      
+      
+      
+   } else {
+   }
+  });
+    
+    
+
+  } 
 }
 
   function exibirDadosPerfil(userData) {
@@ -523,28 +514,9 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
   document.querySelector('.user-email').textContent = userData.email;
 }
 
-  function exibirConteudoApropriado(isUserAuthenticated) {
-  if (isUserAuthenticated) {
-    profileLink.style.display = 'block'; // Exibe o link de perfil
-    divPedido.style.display = 'block';
-    divProfile.style.display = 'flex';
-    loginLinks.forEach((link) => {
-      link.style.display = 'none'; // Oculta os links de login
-    });
-    console.log(userIdFromDB); // O usuário está autenticado, exiba o conteúdo apropriado
-  } else {
-    profileLink.style.display = 'none'; // Oculta o link de perfil
-    divPedido.style.display = 'none';
-    divProfile.style.display = 'none';
-    loginLinks.forEach((link) => {
-      link.style.display = 'block'; // Exibe os links de login
-    });
-  }
-}
   
-  if (divProfile) {
     dataProfileNav();
-  }
+  
 
   //====================================//
 
@@ -924,7 +896,10 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
   }
 
-  if (btnSavePreference) {
+  // chamas as funções caso esteja autenticados
+   onAuthStateChanged(auth, (user) => {
+   if (user) {
+     if (btnSavePreference) {
     btnSavePreference.addEventListener('click', (event) => {
       event.preventDefault();
       succesStatusPreference.style.display = 'none';
@@ -934,7 +909,7 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
 
     });
   }
-  if (btnSavePreference) {
+     if (btnSavePreference) {
     // Recuperar as preferências de notificação do banco de dados
     get(preferenceRef)
       .then((snapshot) => {
@@ -953,15 +928,13 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
         errorStatusPreference.innerHTML = 'Erro ao recuperar preferências, tente fazer login novamente';
       });
   }
-
-  if (loginOut) {
+     if (loginOut) {
     loginOut.onclick = loginOutt;
   }
-  if (loginOutNav) {
+     if (loginOutNav) {
     loginOutNav.onclick = loginOutt;
   }
-
-  if (altbtnpass) {
+     if (altbtnpass) {
     altbtnpass.addEventListener('click', (event) => {
       event.preventDefault();
       succesStatusPass.style.display = 'none';
@@ -970,11 +943,13 @@ document.addEventListener("DOMContentLoaded", checkAuthenticationBeforeRender);
       setTimeout(alterarPass, 1000);
     });
   }
-  if (profilePage || profilePageE) {
+     if (profilePage || profilePageE) {
     editProfile();
     profilePicture();
-    
   }
+   } else {
+   }
+  });
 
   window.closeAlertLoginOut = function closeAlertLoginOut() {
     Swal.close();
