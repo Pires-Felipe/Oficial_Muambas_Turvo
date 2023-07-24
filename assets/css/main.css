@@ -5122,13 +5122,13 @@ ol {
   overflow-x: auto;
 }
 
-.nav-item {
+.nav-item-tab {
   flex: 1;
-    width: 100%;
+ width: 100%;
   margin: 0 10px;
 }
 
-.nav-link {
+.nav-link-tab {
   margin-bottom: -2px;
   border: none;
   color: #2c384e;
@@ -5147,16 +5147,16 @@ ol {
   text-align: center;
 }
 
-.nav-link i {
+.nav-link-tab i {
   display: block; /* Coloca o ícone em uma nova linha */
 }
 
-.nav-tabs .nav-link:hover,
-.nav-tabs .nav-link:focus {
+.nav-tabs .nav-link-tab:hover,
+.nav-tabs .nav-link-tab:focus {
   color: #4154f1;
 }
 
-.nav-tabs .nav-link.active {
+.nav-tabs .nav-link-tab.active {
   background-color: #fff;
   color: #4154f1;
   border: 1px solid #0a22e4;
