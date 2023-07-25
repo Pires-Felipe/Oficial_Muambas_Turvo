@@ -897,8 +897,8 @@ function exibirConteudoApropriado(isUserAuthenticated) {
   }
 
   // chamas as funções caso esteja autenticados
-   onAuthStateChanged(auth, (user) => {
-   if (user) {
+   
+   
      if (btnSavePreference) {
     btnSavePreference.addEventListener('click', (event) => {
       event.preventDefault();
@@ -947,9 +947,8 @@ function exibirConteudoApropriado(isUserAuthenticated) {
     editProfile();
     profilePicture();
   }
-   } else {
-   }
-  });
+   
+  
 
   window.closeAlertLoginOut = function closeAlertLoginOut() {
     Swal.close();
