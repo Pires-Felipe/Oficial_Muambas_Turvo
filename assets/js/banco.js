@@ -56,7 +56,6 @@
   let userIdFrom = ""; // Variável global para armazenar o ID do usuário
   const userIdFromDB = localStorage.getItem("userIdFrom");
 
-
   //banco de dados referências
   
   const usuariosRef = ref(database, "usuarios");
@@ -79,7 +78,6 @@
   const succesStatusFoto = document.querySelector('.sent-message-profile-foto');
   const errorStatusFoto = document.querySelector('.error-message-profile-foto');
   const loadingFoto = document.querySelector('.loading-profile-foto');
-
 
   const succesStatusContato = document.querySelector('.sent-message-contato');
   const errorStatusContato = document.querySelector('.error-message-contato');
@@ -436,8 +434,21 @@ function exibirConteudoApropriado(isUserAuthenticated) {
   const cachedProfileData = localStorage.getItem('profileData');
   const cachedProfilePhotoURL = localStorage.getItem('profilePhotoURL');
   const cachedUserAuthState = localStorage.getItem('userAuthState');
+  
+  if (cachedUserAuthState) {
+    // alert("user on");
+    console.log(cachedUserAuthState)
+  }
+  if (cachedProfileData) {
+  //  alert("perf on");
+    console.log(cachedProfileData)
+  }
+  if (cachedProfilePhotoURL) {
+  //  alert("url foto on")
+    console.log(cachedProfilePhotoURL)
+  }
 
-  if (cachedProfileData && cachedProfilePhotoURL && cachedUserAuthState) {
+  if (cachedUserAuthState) {
     // Se os dados do perfil, a URL da foto e o estado de autenticação estiverem em cache, carregar diretamente
     const userData = JSON.parse(cachedProfileData);
     exibirDadosPerfil(userData);
@@ -449,21 +460,23 @@ function exibirConteudoApropriado(isUserAuthenticated) {
      authDisplay.style.display = 'block';
    }
    
-   
+   if (cachedProfilePhotoURL) {
     // Exibir a imagem de perfil do cache
     perfilFotoNav.src = cachedProfilePhotoURL;
     if (perfilFotoEdit) { perfilFotoEdit.src = cachedProfilePhotoURL; };
     if (perfilFotoView) { perfilFotoView.src = cachedProfilePhotoURL; };
-
+  } else {
+        perfilFotoNav.src = "assets/images/profile-img.jpg";
+    if (perfilFotoEdit) { perfilFotoEdit.src = "assets/images/profile-img.jpg";};
+    if (perfilFotoView) { perfilFotoView.src = "assets/images/profile-img.jpg";};
+ 
+  }
   } else {
     
-    divProfile.style.display = "none";
+    divProfile.style.display = 'none';
     profileLink.style.display = 'none';
     divPedido.style.display = 'none';
     
-    
-    onAuthStateChanged(auth, (user) => {
-   if (user) {
           // Se não estiverem em cache, buscar os dados do perfil e a URL da foto do banco de dados
     get(credenciaisRef)
       .then((snapshot) => {
@@ -499,9 +512,8 @@ function exibirConteudoApropriado(isUserAuthenticated) {
       
       
       
-   } else {
-   }
-  });
+   
+  
     
     
 
@@ -706,6 +718,7 @@ function exibirConteudoApropriado(isUserAuthenticated) {
         perfilFotoView.src = url;
         perfilFotoEdit.src = url;
         perfilFotoNav.src = url;
+        
         localStorage.setItem('profilePhotoURL', url);
       }).catch((error) => {
         console.log('Erro ao obter a URL da foto de perfil:', error);
@@ -738,7 +751,8 @@ function exibirConteudoApropriado(isUserAuthenticated) {
     deleteObject(storageRef(storageProfileRef, 'Fotos_perfil_' + userIdFromDB)).then(() => {
       loadingFoto.style.display = "none"
       succesStatusFoto.style.display = "block";
-      succesStatusFoto.innerHTML = "Foto removida com sucesso"
+      succesStatusFoto.innerHTML = "Foto removida com sucesso";
+      localStorage.removeItem('profilePhotoURL');
       console.log('Foto de perfil removida com sucesso.');
 
       // Limpa a imagem das const perfilFotoView e perfilFotoEdit
@@ -1195,23 +1209,35 @@ increaseBtn.addEventListener("click", () => {
 
 
   // Puxar lista de produtos do banco de dados
-  function createProductCards() {
-    const productContainer = document.querySelector(".productCont");
+function createProductCards() {
+  const productContainer = document.querySelector(".productCont");
 
-    onValue(produtosRef, (snapshot) => {
+  onValue(produtosRef, (snapshot) => {
+    if (productContainer) {
+      productContainer.innerHTML = ""; // Limpa o conteúdo da div com a class="row"
 
-      if (productContainer) {
-        productContainer.innerHTML = ""; // Limpa o conteúdo da div com a class="row"
+      const produtos = snapshot.val();
+      for (const productId in produtos) {
+        const product = produtos[productId];
+        const card = createCardElement(productId, product);
 
-        const produtos = snapshot.val();
-        for (const productId in produtos) {
-          const product = produtos[productId];
-          const card = createCardElement(productId, product);
-          productContainer.appendChild(card);
+        // Verifica a categoria do produto e adiciona o card à div correta
+        const categoryClass = getCategoryClassName(product.category);
+        const categoryContainer = document.querySelector(`.${categoryClass}`);
+        if (categoryContainer) {
+          categoryContainer.appendChild(card);
         }
       }
-    });
-  }
+    }
+  });
+}
+
+function getCategoryClassName(category) {
+  // Transforma o nome da categoria para minúsculo e remove acentuação e caracteres especiais
+  return category.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\W+/g, "-");
+}
+
+
 
   function createCardElement(productId, product) {
     
@@ -1339,14 +1365,9 @@ function fetchProductDetails(productId) {
         productTitle.innerHTML = productData.title;
         productPrice.innerHTML = productData.price;
         productDescription.innerHTML = productData.subtitle;
-
-        if (isImageURL(productData.details)) {
-          // Se o productData.details for uma URL de imagem
-          productDetailsImg.src = productData.details;
-        } else {
-          // Se o productData.details for um texto
-          productDetails.innerHTML = productData.details;
-        }
+       
+        productDetails.src = productData.details;
+        
 
         // Verificar se o produto possui informações sobre as cores
         if (productData.availablecolors && Array.isArray(productData.availablecolors)) {
@@ -1410,11 +1431,6 @@ function fetchProductDetails(productId) {
     .catch((error) => {
       console.error('Erro ao recuperar detalhes do produto:', error);
     });
-}
-
-// Função para verificar se uma URL é de uma imagem
-function isImageURL(url) {
-  return url.toLowerCase().startsWith('http');
 }
 
 
@@ -1523,7 +1539,7 @@ fetchProductDetails(productId);
       <a class="cart-img"><img class="img-cart" src="${productImage}" alt="#"></a>
     </div>
     <div class="content">
-      <h4><a href="product-details.html">${productTitle}</a></h4>
+      <h4><a href="product-details.html?id=${productId}">${productTitle}</a></h4>
       <p class="quantity">${productQuantity}x - <span class="amount">R$${(productPrice * productQuantity).toFixed(2)}</span></p>
       <p class="color">Cores: ${selectedColors.join(', ')}</p>
     </div>
@@ -1562,7 +1578,7 @@ fetchProductDetails(productId);
             <a class="cart-img" href="#"><img src="${item.imagem}" alt="#"></a>
           </div>
           <div class="content">
-            <h4><a href="product-details.html">${item.titulo}</a></h4>
+            <h4><a href="product-details.html?id=${item.id}">${item.titulo}</a></h4>
             <p class="quantity">${item.quantidade}x - <span class="amount">R$${(item.preco_unitario * item.quantidade).toFixed(2)}</span></p>
             ${item.cores_selecionadas ? `<p class="color">Cores: ${item.cores_selecionadas.join(', ')}</p>` : ''}
           </div>
