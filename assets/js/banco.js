@@ -1208,13 +1208,14 @@ increaseBtn.addEventListener("click", () => {
   //====================================//
 
 
-  // Puxar lista de produtos do banco de dados
+// Puxar lista de produtos do banco de dados
 function createProductCards() {
-  const productContainer = document.querySelector(".productCont");
+  const productContainer = document.querySelector(".productcont");
 
   onValue(produtosRef, (snapshot) => {
     if (productContainer) {
       productContainer.innerHTML = ""; // Limpa o conteúdo da div com a class="row"
+      productContainer.style.display = "flex"; // Aplica o estilo display: flex
 
       const produtos = snapshot.val();
       for (const productId in produtos) {
@@ -1232,6 +1233,9 @@ function createProductCards() {
   });
 }
 
+
+
+
 function getCategoryClassName(category) {
   // Transforma o nome da categoria para minúsculo e remove acentuação e caracteres especiais
   return category.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\W+/g, "-");
@@ -1240,6 +1244,8 @@ function getCategoryClassName(category) {
 
 
   function createCardElement(productId, product) {
+  
+
     
   const colDiv = document.createElement("div");
   colDiv.className = "col-lg-3 col-md-6 col-12 card-index-product";
@@ -1309,6 +1315,7 @@ function getCategoryClassName(category) {
   
 
   colDiv.appendChild(card);
+  
 
   return colDiv;
 }

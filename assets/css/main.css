@@ -3355,15 +3355,24 @@ ol {
   background: #fff;
 }
 
-.productCont {
+.productcont {
   
+background: pink;
+width: 100%;
+}
+
+.selecao {
+  background: ;
   display: flex;
-  justify-content: center;
 }
 
 .card-index-product {
-  width: 33.33333%;
+  width: 33%;
+  background: pink;
+  margin: 10px 0;
 }
+
+
 
 @media (min-width: 768px) {
   .card-index-product {
@@ -5104,6 +5113,8 @@ ol {
   border-bottom: 2px solid #ebeef4;
   overflow-x: auto;
 }
+
+
 
 .nav-item-tab {
   
