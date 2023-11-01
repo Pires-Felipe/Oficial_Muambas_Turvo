@@ -4411,11 +4411,13 @@ fieldset:disabled .btn {
 }
 
 .tab-content>.tab-pane {
-  display: none
+  display: none;
 }
 
 .tab-content>.active {
-  display: block
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .navbar {

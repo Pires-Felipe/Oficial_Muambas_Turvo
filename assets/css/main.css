@@ -3344,32 +3344,46 @@ ol {
 ========================================*/
 /* Single Product*/
 .single-product {
-  border: 1px solid #eee;
   border-radius: 4px;
   -webkit-transition: all 0.4s ease;
   transition: all 0.4s ease;
-  margin-top: 16px;
   -webkit-box-shadow: 0px 0px 20px #00000012;
   box-shadow: 0px 0px 20px #00000012;
   padding: 5px;
-  background: #fff;
+  background: #FFF;
 }
 
-.productcont {
-  
-background: pink;
-width: 100%;
-}
-
-.selecao {
-  background: ;
+.grid-product-index, .grid-product {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  
 }
+
+
+/* Oculte produtos após o 12º */
+.grid-product-index .card-index-product:nth-child(n+13) {
+  display: none;
+}
+
+.ver-mais {
+  position: absolute;
+  bottom: 10px;
+  right: 25px;
+  padding: 10px 20px;
+  background-color: #0074d9;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
 
 .card-index-product {
-  width: 33%;
-  background: pink;
-  margin: 10px 0;
+  width: 30%;
+  margin-top: 10px;
 }
 
 
@@ -5308,6 +5322,7 @@ width: 100%;
 .center-page-main {
    width: 100%;
    padding: 0 6%;
+   margin-top: 10px;
 }
 
 @media (min-width: 768px) {
@@ -5393,9 +5408,6 @@ width: 100%;
   background-color: rgba(255, 255, 255, 0.6);
 }
 
-.card-body {
-  padding: 0 20px 20px 20px;
-}
 
 /* Accordion */
 .accordion-item {

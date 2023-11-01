@@ -485,6 +485,11 @@ function exibirConteudoApropriado(isUserAuthenticated) {
         localStorage.setItem('profileData', JSON.stringify(userData));
         exibirDadosPerfil(userData);
 
+
+
+
+
+        // stado auth
         // Verificar o estado de autenticação e armazenar em cache
         onAuthStateChanged(auth, (user) => {
           const isUserAuthenticated = !!user; // Converte o objeto user em um valor booleano
@@ -494,21 +499,31 @@ function exibirConteudoApropriado(isUserAuthenticated) {
         });
       })
       .catch((error) => {
-        console.error('Erro ao obter os dados do perfil:', error);
+        console.error('Erro ao obter os dados do perfil: Não logado', error);
       });
  
-    // Buscar a URL da imagem de perfil e armazenar em cache
-    getDownloadURL(filePhotoRef)
-      .then((url) => {
+ 
+  // stado auth
+ 
+         onAuthStateChanged(auth, (user) => {
+        if (user) {
+             // Buscar a URL da imagem de perfil e armazenar em cache
+        getDownloadURL(filePhotoRef)
+         .then((url) => {
         perfilFotoNav.src = url;
         if (perfilFotoEdit) { perfilFotoEdit.src = url; };
         if (perfilFotoView) { perfilFotoView.src = url; };
         // Armazenar a URL da imagem em cache para uso futuro
         localStorage.setItem('profilePhotoURL', url);
       })
-      .catch((error) => {
+         .catch((error) => {
         console.error('Erro ao obter a URL da foto de perfil:', error);
       });
+        } else {
+          console.log("Não login");
+        }
+      });
+
       
       
       
@@ -1210,13 +1225,10 @@ increaseBtn.addEventListener("click", () => {
 
 // Puxar lista de produtos do banco de dados
 function createProductCards() {
-  const productContainer = document.querySelector(".productcont");
+  const productContainer = document.querySelector(".navbar-categorias");
 
   onValue(produtosRef, (snapshot) => {
     if (productContainer) {
-      productContainer.innerHTML = ""; // Limpa o conteúdo da div com a class="row"
-      productContainer.style.display = "flex"; // Aplica o estilo display: flex
-
       const produtos = snapshot.val();
       for (const productId in produtos) {
         const product = produtos[productId];
@@ -1225,8 +1237,10 @@ function createProductCards() {
         // Verifica a categoria do produto e adiciona o card à div correta
         const categoryClass = getCategoryClassName(product.category);
         const categoryContainer = document.querySelector(`.${categoryClass}`);
+        const productgrid = document.querySelector(`.grid-${categoryClass}`);
         if (categoryContainer) {
-          categoryContainer.appendChild(card);
+          productgrid.appendChild(card)
+          categoryContainer.appendChild(productgrid);
         }
       }
     }
@@ -1246,7 +1260,6 @@ function getCategoryClassName(category) {
   function createCardElement(productId, product) {
   
 
-    
   const colDiv = document.createElement("div");
   colDiv.className = "col-lg-3 col-md-6 col-12 card-index-product";
 
@@ -1322,6 +1335,23 @@ function getCategoryClassName(category) {
 
   createProductCards();
 
+  var btnvermais = document.querySelectorAll(".ver-mais");
+
+    // Define a função de redirecionamento com base no botão clicado
+    function redirecionar(event) {
+        // Obtém a URL a partir do atributo data-url do botão clicado
+        var url = "product-grids.html"
+        
+        // Redireciona para a URL obtida
+        window.location.href = url;
+    }
+
+    // Atribui a função de redirecionamento a cada botão
+    btnvermais.forEach(function(botao) {
+        botao.addEventListener("click", redirecionar);
+    });
+
+
 
   //====================================//
 
@@ -1373,7 +1403,7 @@ function fetchProductDetails(productId) {
         productPrice.innerHTML = productData.price;
         productDescription.innerHTML = productData.subtitle;
        
-        productDetails.src = productData.details;
+        productDetails.innerHTML = productData.details;
         
 
         // Verificar se o produto possui informações sobre as cores
