@@ -2215,9 +2215,11 @@ fetchProductDetails(productId);
   var submitContatobtn = document.getElementById('contact-form');
 
   if (submitContatobtn) {
-   onAuthStateChanged(auth, (user) => {
+   
 
   submitContatobtn.addEventListener('submit', function(event) {
+    onAuthStateChanged(auth, (user) => {
+    
    if (user) {
      event.preventDefault()
      succesStatusContato.style.display = 'none';
@@ -2234,7 +2236,8 @@ fetchProductDetails(productId);
    });
    
   });
-  }
+    
+  } 
   
   
   

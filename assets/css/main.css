@@ -1725,7 +1725,15 @@ ol {
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   justify-content: end;
+  
 }
+
+@media (max-width: 767px) {
+  .header .navbar-cart {
+    margin-top: 30px;
+  }
+}
+
 
 .header .navbar-cart .wishlist {
   margin-right: 12px;
@@ -2559,12 +2567,7 @@ ol {
   border-color: transparent;
 }
 
-.header .navbar-brand {
-  margin: 0;
 
-
-
-}
 
 
 .header-nav .profile {
@@ -2609,13 +2612,15 @@ ol {
     display: block;
     text-align: left;
     padding: 0;
+    width: 100px;
+    height: auto;
+    margin: 0 0 20px 20px;
   }
 }
 
 .header .navbar-brand img {
-  width: 200px;
-
-}
+    width: 150px;
+    margin-block-end: 18px;
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
   .header .navbar-brand img {
@@ -2626,7 +2631,9 @@ ol {
 
 @media (max-width: 767px) {
   .header .navbar-brand img {
-    width: 180px;
+    width: 100px;
+    
+    
   }
 }
 
@@ -4613,7 +4620,6 @@ ol {
   display: flex;
   flex-wrap: wrap;
   align-self: center;
-  
 }
 
 .row-align-footer {
