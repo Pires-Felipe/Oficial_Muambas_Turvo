@@ -1421,7 +1421,7 @@ function fetchProductDetails(productId) {
             const checkboxInput = document.createElement('input');
             checkboxInput.type = 'checkbox';
             checkboxInput.id = `checkbox-${color}`;
-            checkboxInput.checked = true;
+            checkboxInput.checked = false;
             checkboxDiv.appendChild(checkboxInput);
 
             const checkboxLabel = document.createElement('label');
