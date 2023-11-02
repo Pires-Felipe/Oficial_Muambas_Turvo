@@ -93,7 +93,7 @@
           <div class="center-flex col-lg-4 col-md-4 col-12 top-nav-perfil-">
             <div class="top-end ">
               <a href="profile.html">
-                <div class="user"><i class="lni lni-user"></i>Perfil</div>
+                <div class="user" style="display: none;" ><i class="lni lni-user"></i>Perfil</div>
               </a>
               <ul class="user-login">
                 <li>
@@ -103,10 +103,10 @@
                   <a href="login.html">Criar Conta</a>
                 </li>
               </ul>
-              <div class="div-a-pedido">
+              <div class="div-a-pedido" style="display: none;">
                 <a class="a-pedido" href="Pedidos.html">Pedidos</a>
               </div>
-              <div class="nav-item-profile nav-item dropdown ">
+              <div class="nav-item-profile nav-item dropdown" style="display: none;" >
                 <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                   <img src="assets/images/profile-img.jpg" alt="Profile" class="rounded-circle profile-nav-foto">
                   <span class="d-none d-md-block dropdown-toggle ps-2 user-nome-ps-2"></span>
@@ -169,7 +169,7 @@
           <div class="col-lg-3 col-md-3 col-7">
             <!-- Start Header Logo -->
             <a class="navbar-brand" href="index.html">
-              <img src="assets/images/logo/logo.png" alt="Logo">
+              <img src="assets/images/logo/logoAlt.png" alt="Logo">
             </a>
             <!-- End Header Logo -->
           </div>
@@ -256,37 +256,37 @@
         <div class="col-lg-8 col-md-6 col-12">
           <div class="nav-inner">
             <!-- Start Mega Category Menu -->
-            <div class="mega-category-menu">
-              <span class="cat-button"><i class="lni lni-menu"></i>Todas as categorias</span>
-              <ul class="sub-category">
-                <li>
-                  <a href="product-grids.html">Eletrônicos<i class="lni lni-chevron-right"></i></a>
-                  <ul class="inner-sub-category">
-                    <li><a href="product-grids.html">Digital Cameras</a></li>
-                    <li><a href="product-grids.html">Camcorders</a></li>
-                    <li><a href="product-grids.html">Camera Drones</a></li>
-                    <li><a href="product-grids.html">Smart Watches</a></li>
-                    <li><a href="product-grids.html">Headphones</a></li>
-                    <li><a href="product-grids.html">MP3 Players</a></li>
-                    <li><a href="product-grids.html">Microphones</a></li>
-                    <li><a href="product-grids.html">Chargers</a></li>
-                    <li><a href="product-grids.html">Batteries</a></li>
-                    <li><a href="product-grids.html">Cables & Adapters</a></li>
-                  </ul>
-                </li>
-                <li><a href="product-grids.html">accessories</a></li>
-                <li><a href="product-grids.html">Televisions</a></li>
-                <li><a href="product-grids.html">best selling</a></li>
-                <li><a href="product-grids.html">top 100 offer</a></li>
-                <li><a href="product-grids.html">sunglass</a></li>
-                <li><a href="product-grids.html">watch</a></li>
-                <li><a href="product-grids.html">man’s product</a></li>
-                <li><a href="product-grids.html">Home Audio & Theater</a></li>
-                <li><a href="product-grids.html">Computers & Tablets </a></li>
-                <li><a href="product-grids.html">Video Games </a></li>
-                <li><a href="product-grids.html">Home Appliances </a></li>
-              </ul>
-            </div>
+<div class="mega-category-menu">
+  <span class="cat-button"><i class="lni lni-menu"></i>Todas as categorias</span>
+  <ul class="sub-category">
+    <li>
+      <a href="product-grids.html">Eletrônicos<i class="lni lni-chevron-right"></i></a>
+      <ul class="inner-sub-category">
+        <li><a href="product-grids.html">Câmeras digitais</a></li>
+        <li><a href="product-grids.html">Iluminação</a></li>
+        <li><a href="product-grids.html">Câmera Drones</a></li>
+        <li><a href="product-grids.html">Smart Watches</a></li>
+        <li><a href="product-grids.html">Fones Bluetooth</a></li>
+        <li><a href="product-grids.html">MP3 Players</a></li>
+        <li><a href="product-grids.html">Microfones</a></li>
+        <li><a href="product-grids.html">Carregadores </a></li>
+        <li><a href="product-grids.html">Baterias</a></li>
+        <li><a href="product-grids.html">Cabos & Adaptadores </a></li>
+      </ul>
+    </li>
+    <li><a href="product-grids.html">acessórios</a></li>
+    <li><a href="product-grids.html">Televisões</a></li>
+    <li><a href="product-grids.html">mais vendidos</a></li>
+    <li><a href="product-grids.html">top 100 ofertas</a></li>
+    <li><a href="product-grids.html">óculos de sol</a></li>
+    <li><a href="product-grids.html">relógio</a></li>
+    <li><a href="product-grids.html">produtos masculinos</a></li>
+    <li><a href="product-grids.html">Áudio e teatro em casa</a></li>
+    <li><a href="product-grids.html">Computadores e tablets</a></li>
+    <li><a href="product-grids.html">Video Games</a></li>
+    <li><a href="product-grids.html">Eletrodomésticos</a></li>
+  </ul>
+</div>
             <!-- End Mega Category Menu -->
             <!-- Start Navbar -->
             <nav class="navbar navbar-expand-lg">
@@ -305,9 +305,8 @@
                     <ul class="sub-menu collapse" id="submenu-1-2">
                       <li class="nav-item"><a href="sobre.html">Sobre</a></li>
                       <li class="nav-item"><a href="Pedidos.html">Pedidos</a></li>
-                      <li class="nav-item"><a href="login.html">Login</a></li>
-                      <li class="nav-item"><a href="login.html">Registrar</a></li>
-                      <li class="nav-item"><a href="profile.html">Perfil</a></li>
+                       <li class="nav-item"><a href="login.html">Login/Registrar</a></li> 
+                       <li class="nav-item"><a href="profile.html">Perfil</a></li>
                       <li class="nav-item"><a href="faq.html">FAQs</a></li>
                       <li class="nav-item"><a href="contact.html">Contato</a></li>
                     </ul> </li>
@@ -479,7 +478,7 @@
  
    <div class="whatsapp-items">
  
-    <a target="_blank" class="whatsapp-row-item" href="https://api.whatsapp.com/send?phone=5542991083236&text=Ol%C3%A1,%20gostaria%20de%20saber%20sobre%20os%20pedidos%20e%20entrega.">
+    <a target="_blank" class="whatsapp-row-item" href="https://api.whatsapp.com/send?phone=12268670810&text=Ol%C3%A1,%20gostaria%20de%20saber%20sobre%20os%20pedidos%20e%20entrega.">
      <div class="whatsapp-list-item-avatar">
       <i class="bi bi-box"></i>
      </div>
@@ -489,7 +488,7 @@
      </div>
     </a>
  
-    <a target="_blank" class="whatsapp-row-item" href="https://api.whatsapp.com/send?phone=5542991083236&text=Ol%C3%A1,%20gostaria%20de%20falar%20com%20o%20desenvolvedor.">
+    <a target="_blank" class="whatsapp-row-item" href="https://api.whatsapp.com/send?phone=12268670810&text=Ol%C3%A1,%20gostaria%20de%20falar%20com%20o%20desenvolvedor.">
      <div class="whatsapp-list-item-avatar">
       <i class="bi bi-code"></i>
      </div>
@@ -499,7 +498,7 @@
      </div>
     </a>
  
-    <a target="_blank" class="whatsapp-row-item" href="https://wa.me/5542991083236?text=Ol%C3%A1%2C+gostaria+de+falar+com+o+setor+comercial.">
+    <a target="_blank" class="whatsapp-row-item" href="https://wa.me/12268670810?text=Ol%C3%A1%2C+gostaria+de+falar+com+o+setor+comercial.">
      <div class="whatsapp-list-item-avatar">
       <i class="bi bi-shop"></i>
      </div>
@@ -509,7 +508,7 @@
      </div>
     </a>
  
-    <a target="_blank" class="whatsapp-row-item" href="https://wa.me/5542991083236?text=Ol%C3%A1%2C+gostaria+de+saber+sobre+as+formas+de+pagamento.">
+    <a target="_blank" class="whatsapp-row-item" href="https://wa.me/12268670810?text=Ol%C3%A1%2C+gostaria+de+saber+sobre+as+formas+de+pagamento.">
      <div class="whatsapp-list-item-avatar">
       <i class="bi bi-coin"></i>
      </div>
@@ -519,7 +518,7 @@
      </div>
     </a>
  
-    <a target="_blank" class="whatsapp-row-item" href="https://api.whatsapp.com/send?phone=5542991083236&text=Ol%C3%A1,%20gostaria%20de%20solicitar%20um%20produto%20que%20estou%20interessado%20e%20n%C3%A3o%20encontrei%20no%20site.">
+    <a target="_blank" class="whatsapp-row-item" href="https://api.whatsapp.com/send?phone=12268670810&text=Ol%C3%A1,%20gostaria%20de%20solicitar%20um%20produto%20que%20estou%20interessado%20e%20n%C3%A3o%20encontrei%20no%20site.">
      <div class="whatsapp-list-item-avatar">
       <i class="bi bi-boxes"></i>
      </div>
@@ -538,10 +537,7 @@
   </div>
  
   <label class="btn-whatsapp-chat burbuja-whatsapp" for="whatsapp-chat-checkbox">
-   <div class="bur-text-content">
-    <div class="bur-txt-1">Suporte Muambas</div>
-    <div class="bur-txt-2">Chat Whatsapp</div>
-   </div>
+
    <div class="bur-icon-content">
     <div class="pulsar-content">
      <div class="bur-icon-img">
@@ -577,7 +573,7 @@
                 </h4>
                 <div class="newsletter-form-head">
                   <form action="#" method="get" target="_blank" class="newsletter-form">
-                    <input name="EMAIL" placeholder="Email..." type="email">
+                    <input name="EMAIL" placeholder="Digite seu email..." type="email">
                     <div class="button">
                       <button class="btn">Inscrever<span class="dir-part"></span></button>
                     </div>

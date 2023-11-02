@@ -1229,20 +1229,24 @@ function createProductCards() {
 
   onValue(produtosRef, (snapshot) => {
     if (productContainer) {
+      const selecion = document.getElementById("um-tab");
+   
       const produtos = snapshot.val();
       for (const productId in produtos) {
         const product = produtos[productId];
         const card = createCardElement(productId, product);
-
-        // Verifica a categoria do produto e adiciona o card à div correta
+        
+       // Verifica a categoria do produto e adiciona o card à div correta
         const categoryClass = getCategoryClassName(product.category);
         const categoryContainer = document.querySelector(`.${categoryClass}`);
         const productgrid = document.querySelector(`.grid-${categoryClass}`);
         if (categoryContainer) {
           productgrid.appendChild(card)
           categoryContainer.appendChild(productgrid);
+          
         }
       }
+      selecion.click();
     }
   });
 }

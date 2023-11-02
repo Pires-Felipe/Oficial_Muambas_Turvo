@@ -3783,13 +3783,30 @@ ol {
    justify-items: flex-start;
 }
 
-.item-details .product-images img {
+.item-details .product-images .images img {
   width: 100%;
   cursor: pointer;
   border: 1px solid #eee;
   border-radius: 4px;
   overflow: hidden;
   padding: 5px;
+}
+
+.main-img {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#current {
+  width: 100%;
+  margin: auto;
+}
+
+@media (min-width: 768px) {
+  #current {
+    width: 350px;
+  }
 }
 
 .item-details .product-images .images {
