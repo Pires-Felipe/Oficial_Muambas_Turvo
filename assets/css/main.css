@@ -1738,6 +1738,11 @@ ol {
     margin: 30px 25px 0 0;
   }
 }
+@media (max-width: 320px) {
+  .header .navbar-cart {
+    margin: 30px 40px 0 0;
+  }
+}
 
 .header .navbar-cart .wishlist {
   margin-right: 12px;
