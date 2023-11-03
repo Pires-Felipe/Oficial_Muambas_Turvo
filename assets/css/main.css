@@ -1738,9 +1738,9 @@ ol {
     margin: 30px 25px 0 0;
   }
 }
-@media (max-width: 340px) {
+@media (max-width: 374px) {
   .header .navbar-cart {
-    margin: 30px 70px 0px 0px;
+    margin: 30px 74px 0px 0px;
   }
 }
 
