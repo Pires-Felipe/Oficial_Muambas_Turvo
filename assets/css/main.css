@@ -1733,7 +1733,11 @@ ol {
     margin-top: 30px;
   }
 }
-
+@media (max-width: 400px) {
+  .header .navbar-cart {
+    margin: 30px 25px 0 0;
+  }
+}
 
 .header .navbar-cart .wishlist {
   margin-right: 12px;
