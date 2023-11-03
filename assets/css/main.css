@@ -1740,7 +1740,7 @@ ol {
 }
 @media (max-width: 374px) {
   .header .navbar-cart {
-    margin: 30px 74px 0px 0px;
+    margin: 30px 78px 0px 0px;
   }
 }
 
@@ -5651,6 +5651,13 @@ ol {
       width: 300px;
    }
 }
+@media (max-width: 370px) {
+   .whatsapp-wrap {
+      width: 250px;
+      margin: 0 0 0 15px;
+   }
+}
+
 .whatsapp-wrap:before {
   content: "";
   position: absolute;
