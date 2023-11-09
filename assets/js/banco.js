@@ -90,16 +90,21 @@
   const succesStatusPreference = document.querySelector('.sent-message-preference');
   const errorStatusPreference = document.querySelector('.error-message-preference');
   const loadingPreference = document.querySelector('.loading-preference');
+  const loadingLogin = document.querySelector(".loading-login");
+  const loadingSigin = document.querySelector(".loading-sigin");
+ 
  
   // Verificação de login
   if (submitButtonLogin) {
     submitButtonLogin.addEventListener("click", () => {
       event.preventDefault();
+      loadingLogin.style.display = "block";
       const email = emailInputLogin.value.toLowerCase().trim();
       const password = passwordInputLogin.value;
 
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
+          loadingLogin.style.display = "none"
           // Autenticação bem-sucedida
           getUserIdFromEmail(email)
             .then((userIdFromDB) => {
@@ -113,7 +118,8 @@
             });
         })
         .catch((signInError) => {
-
+          loadingLogin.style.display = "none"
+          
           // Ocorreu um erro durante a autenticação
           const errorCode = signInError.code;
           const errorMessage = signInError.message;
@@ -140,6 +146,7 @@
 
     submitButtonSignup.addEventListener('click', (event) => {
       event.preventDefault();
+      loadingSigin.style.display = "block"
       const email = emailInputSignup.value.toLowerCase().trim();
       const password = passwordInputSignup.value;
       const nome = nomeInputSignup.value;
@@ -178,10 +185,13 @@
                 window.location.href = "index.html"; // Redireciona para a página de índice
               })
               .catch((error) => {
+               loadingSigin.style.display = "none" 
                 console.error('Erro ao salvar os dados do usuário:', error);
               });
           })
           .catch((createUserError) => {
+            
+            loadingSigin.style.display = "none"
             // Ocorreu um erro ao criar o usuário
             const errorCode = createUserError.code;
             const errorMessage = createUserError.message;
@@ -473,10 +483,11 @@ function exibirConteudoApropriado(isUserAuthenticated) {
   }
   } else {
     
+    if(divProfile) {
     divProfile.style.display = 'none';
     profileLink.style.display = 'none';
     divPedido.style.display = 'none';
-    
+    }
           // Se não estiverem em cache, buscar os dados do perfil e a URL da foto do banco de dados
     get(credenciaisRef)
       .then((snapshot) => {
@@ -541,8 +552,7 @@ function exibirConteudoApropriado(isUserAuthenticated) {
   document.querySelector('.user-email').textContent = userData.email;
 }
 
-  
-    dataProfileNav();
+   dataProfileNav();
   
 
   //====================================//
@@ -1196,7 +1206,7 @@ increaseBtn.addEventListener("click", () => {
     let desconto = 0;
 
     if (valorTotalItens < 15) {
-      frete = 2;
+      frete = 0;
     } else {
       frete = valorTotalItens * 0.12;
     }
@@ -1339,7 +1349,7 @@ function getCategoryClassName(category) {
 
   createProductCards();
 
-  var btnvermais = document.querySelectorAll(".ver-mais");
+ var btnvermais = document.querySelectorAll(".ver-mais");
 
     // Define a função de redirecionamento com base no botão clicado
     function redirecionar(event) {
@@ -1354,7 +1364,7 @@ function getCategoryClassName(category) {
     btnvermais.forEach(function(botao) {
         botao.addEventListener("click", redirecionar);
     });
-
+ 
 
 
   //====================================//
@@ -1973,7 +1983,7 @@ fetchProductDetails(productId);
     console.log(totalPayment);
     const Pix = modulePix;
     const pix = new Pix(
-      "08507487980",
+      "11422350924",
       "Muambas Shop Turvo LTDA",
       "Felipe Pires",
       "Turvo",
